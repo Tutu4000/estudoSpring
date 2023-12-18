@@ -1,9 +1,8 @@
 package com.example.demo.estudante;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,5 +18,26 @@ public class EstudanteController {
     @GetMapping
     public List<Estudante> getEstudantes() {
         return estudanteService.getEstudantes();
+    }
+
+    @PostMapping
+    public void novoEstudante(@RequestBody Estudante estudante){ //Pegar do request body e mapear into estudante
+        estudanteService.addNewStudent(estudante);
+    }
+
+    //DELETE http://localhost:8081/api/v1/estudante/1
+    @DeleteMapping(path = "{estudanteId}") // Path variable faz com que o path da URL seja armazenado em uma variável
+    public void deleteEstudante(@PathVariable("estudanteId") Long estudanteId){//(Data Binding) Mapeamento do parametro da requisição para parametros de método no controlador
+        estudanteService.deleteEstudante(estudanteId);
+    }
+
+    //PUT http://localhost:8081/api/v1/estudante/1?nome=Carlos
+    @PutMapping(path = "{estudanteId}")
+    public void updateEstudante(
+            @PathVariable("estudanteId") Long estudanteId,
+            @RequestParam(required = false) String nome,
+            @RequestParam(required = false) String email
+    ){
+        estudanteService.updateExistingEstudante(estudanteId,nome,email);
     }
 }
